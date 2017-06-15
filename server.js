@@ -30,8 +30,6 @@ RestHapi.config = {
     docExpansion: 'list',
     absluteModelPath: true,
     modelPath: './app/models',
-    absoluteApiPath: true,
-    apiPath: './app/api',    
     mongo: {URI: 'mongodb://localhost:27017/test'}
 };
 
