@@ -20,14 +20,13 @@ Mongoose
         console.log('Connected to the database!');
     });
 
-Server.connection({
-    port: 3000,
-    host: 'localhost',
-		router:{stripTrailingSlash: true},
+Server.connection({ 
+    port: 3000, 
+    host: 'localhost', 
     labels: ['app'] });
 
 RestHapi.config = {
-    appTitle: "Drzewka Turniejowe",
+    appTitle: "Drzewka Turniejowe",    
     docExpansion: 'list',
     absluteModelPath: true,
     modelPath: './app/models',
@@ -35,61 +34,45 @@ RestHapi.config = {
 };
 
 var appServer = Server.select('app');
-
 appServer
     .register(
-        [
-				//angular2:
-				{
-				register: require('./angular-quickstart'),
-				routes: { prefix: '/quickstart' }
-				},
-				{
-				  register: require('good'),
-				  options: {
-				    ops: { interval: 600000 },
-				    reporters: {
-				      console: [
-				        { module: 'good-console'}, 'stdout'
-				      ]
-				    }
-				  }},
+        [         
         // lib plugins
-         {
+         { 
            register: Inert
          },
-
-         {
+         
+         { 
            register: RestHapi,
            options: { mongoose: Mongoose },
            routes: { prefix: '/rest' }
          },
-
+           
         // my plugins
-         {
+         { 
            register: Welcome,
            options: { mongoose: Mongoose }
-         }
+         }      
         ],
-
+    
         (err) => {
-            if (err) throw err;
-/*
-            appServer.route(require('./config/routes_public.js'));
+            if (err) throw err;                        
+            
+            appServer.route(require('./config/routes_public.js'));            
             appServer.views({
                 engines: {pug: Pug},
-                path: __dirname + '/app/templates',
+                path: __dirname + '/app/templates',                                
                 compileOptions: {
-                    basedir: __dirname + '/app/templates',
+                    basedir: __dirname + '/app/templates', 
                     pretty: true},
                 runtimeOptions: {
                     basedir: __dirname + '/app/templates'
                 }
             });
-*/
+            
             Server.start((err) => {
                 if (err) throw err;
                 console.log(`App server running at: ${appServer.info.uri}`);
-            });
-        }
+            });           
+        }    
     );
