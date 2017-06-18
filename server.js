@@ -74,7 +74,7 @@ appServer
 
         (err) => {
             if (err) throw err;
-/*
+
             appServer.route(require('./config/routes_public.js'));
             appServer.views({
                 engines: {pug: Pug},
@@ -86,7 +86,7 @@ appServer
                     basedir: __dirname + '/app/templates'
                 }
             });
-*/
+
             Server.start((err) => {
                 if (err) throw err;
                 console.log(`App server running at: ${appServer.info.uri}`);

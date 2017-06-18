@@ -9,22 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 const core_1 = require('@angular/core');
-let AppComponent = class AppComponent {
-    constructor() {
-        this.name = 'Angular';
+const tree_service_1 = require('../services/tree.service');
+let ApiTestComponent = class ApiTestComponent {
+    constructor(treeService) {
+        this.treeService = treeService;
+        this.name = 'test api';
+    }
+    getAllTrees() {
+        console.log("button for getTree pressed");
+        this.treeService.getTree().then(data => { console.log(data); });
     }
 };
-AppComponent = __decorate([
+ApiTestComponent = __decorate([
     core_1.Component({
-        selector: 'my-app',
+        selector: 'api-test',
         template: `<h1>Hello {{name}}</h1>
-	<login-info><login-info>
-
-
+	<button (click)="getAllTrees()"> get all trees </button>
+	<button (click)="addSampleTree()"> get all trees </button>
 	`,
     }), 
-    __metadata('design:paramtypes', [])
-], AppComponent);
-exports.AppComponent = AppComponent;
-//	<router-outlet></router-outlet>
-//# sourceMappingURL=app.component.js.map
+    __metadata('design:paramtypes', [tree_service_1.TreeService])
+], ApiTestComponent);
+exports.ApiTestComponent = ApiTestComponent;
+//# sourceMappingURL=api-test.component.js.map

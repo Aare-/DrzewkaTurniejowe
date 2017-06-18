@@ -9,22 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 const core_1 = require('@angular/core');
-let AppComponent = class AppComponent {
-    constructor() {
-        this.name = 'Angular';
+const auth_service_1 = require('../../services/auth.service');
+let RegisterComponent = class RegisterComponent {
+    constructor(treeService) {
+        this.treeService = treeService;
     }
 };
-AppComponent = __decorate([
+RegisterComponent = __decorate([
     core_1.Component({
-        selector: 'my-app',
-        template: `<h1>Hello {{name}}</h1>
-	<login-info><login-info>
-
-
+        selector: 'register',
+        template: `
+	<h2>mockup of register </h2>
 	`,
     }), 
-    __metadata('design:paramtypes', [])
-], AppComponent);
-exports.AppComponent = AppComponent;
-//	<router-outlet></router-outlet>
-//# sourceMappingURL=app.component.js.map
+    __metadata('design:paramtypes', [auth_service_1.AuthService])
+], RegisterComponent);
+exports.RegisterComponent = RegisterComponent;
+//# sourceMappingURL=register.component.js.map
