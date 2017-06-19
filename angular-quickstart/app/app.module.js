@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 const core_1 = require('@angular/core');
 const platform_browser_1 = require('@angular/platform-browser');
+const router_1 = require('@angular/router');
 const forms_1 = require('@angular/forms');
 const http_1 = require('@angular/http');
 const app_component_1 = require('./app.component');
@@ -29,6 +30,29 @@ AppModule = __decorate([
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
             http_1.HttpModule,
+            router_1.RouterModule.forRoot([
+                {
+                    path: '',
+                    redirectTo: '/home',
+                    pathMatch: 'full'
+                },
+                {
+                    path: 'register',
+                    component: register_component_1.RegisterComponent
+                },
+                {
+                    path: 'browse',
+                    component: browse_component_1.BrowseComponent
+                },
+                {
+                    path: 'home',
+                    component: home_component_1.HomeComponent
+                },
+                {
+                    path: 'detail/:id',
+                    component: view_component_1.ViewComponent
+                },
+            ])
         ],
         providers: [tree_service_1.TreeService, auth_service_1.AuthService],
         declarations: [

@@ -40,10 +40,7 @@ appServer
     .register(
         [
 				//angular2:
-				{
-				register: require('./angular-quickstart'),
-				routes: { prefix: '/quickstart' }
-				},
+
 				{
 				  register: require('good'),
 				  options: {
@@ -66,16 +63,17 @@ appServer
          },
 
         // my plugins
-         {
-           register: Welcome,
-           options: { mongoose: Mongoose }
-         }
+				{
+				register: require('./angular-quickstart'),
+				routes: { prefix: '/quickstart' }
+				}
         ],
 
         (err) => {
             if (err) throw err;
 
             appServer.route(require('./config/routes_public.js'));
+/*
             appServer.views({
                 engines: {pug: Pug},
                 path: __dirname + '/app/templates',
@@ -86,7 +84,7 @@ appServer
                     basedir: __dirname + '/app/templates'
                 }
             });
-
+*/
             Server.start((err) => {
                 if (err) throw err;
                 console.log(`App server running at: ${appServer.info.uri}`);

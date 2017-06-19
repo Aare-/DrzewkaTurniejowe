@@ -19,12 +19,12 @@ AppComponent = __decorate([
         selector: 'my-app',
         template: `<h1>Hello {{name}}</h1>
 	<login-info><login-info>
-
+	<router-outlet></router-outlet>
 
 	`,
     }), 
     __metadata('design:paramtypes', [])
 ], AppComponent);
 exports.AppComponent = AppComponent;
-//	<router-outlet></router-outlet>
+//
 //# sourceMappingURL=app.component.js.map

@@ -14,13 +14,15 @@ import { HomeComponent }  from './components/home/home.component';
 
 import { TreeService }  from './services/tree.service';
 import {AuthService} from './services/auth.service';
+
+
 @NgModule({
   imports:
 		[
     BrowserModule,
 		FormsModule,
 		HttpModule,
-	/*	RouterModule.forRoot(
+	RouterModule.forRoot(
 			[
 				{
 				  path: '',
@@ -44,7 +46,7 @@ import {AuthService} from './services/auth.service';
 				  component: ViewComponent
 				},
     	])
-*/
+
   	],
 	providers:		[TreeService,AuthService],
   declarations:
