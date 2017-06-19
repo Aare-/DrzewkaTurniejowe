@@ -2,14 +2,11 @@
 
 // libraries
 const Hapi = require('hapi');
-const Pug = require('pug');
 const Server = new Hapi.Server();
 const Mongoose = require('mongoose');
-const Inert = require('inert');
 const RestHapi = require('rest-hapi');
-
-// plugins
-const Welcome = require('./app/plugins/welcome');
+const Good = require('good');
+const AngularQuickstart = require('./angular-quickstart');
 
 Mongoose
     .connection
@@ -39,22 +36,18 @@ var appServer = Server.select('app');
 appServer
     .register(
         [
-				//angular2:
 
-				{
-				  register: require('good'),
-				  options: {
-				    ops: { interval: 600000 },
-				    reporters: {
-				      console: [
-				        { module: 'good-console'}, 'stdout'
-				      ]
-				    }
-				  }},
-        // lib plugins
-         {
-           register: Inert
-         },
+        //angular2:
+        {
+          register: Good,
+          options: {
+            ops: { interval: 600000 },
+            reporters: {
+              console: [
+                { module: 'good-console'}, 'stdout'
+              ]
+            }
+          }},
 
          {
            register: RestHapi,
@@ -63,28 +56,16 @@ appServer
          },
 
         // my plugins
-				{
-				register: require('./angular-quickstart'),
-				routes: { prefix: '/quickstart' }
-				}
+            {
+            register: AngularQuickstart
+            }
         ],
 
         (err) => {
             if (err) throw err;
 
             appServer.route(require('./config/routes_public.js'));
-/*
-            appServer.views({
-                engines: {pug: Pug},
-                path: __dirname + '/app/templates',
-                compileOptions: {
-                    basedir: __dirname + '/app/templates',
-                    pretty: true},
-                runtimeOptions: {
-                    basedir: __dirname + '/app/templates'
-                }
-            });
-*/
+
             Server.start((err) => {
                 if (err) throw err;
                 console.log(`App server running at: ${appServer.info.uri}`);
