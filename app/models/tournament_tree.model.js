@@ -12,6 +12,11 @@ module.exports = function (mongoose) {
         unique: true
     },
 
+    Owner: {
+        type: Types.String,
+        required: true
+    },
+
       /*
        * MongoDB automatically created _id fields for each element in subarray
        * we use this _id field to reference participants from tree nodes
