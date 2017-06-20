@@ -4,17 +4,6 @@
   "description": "Projekt serwisu do latwego tworzenia i zarzadzania drzewkami turniejowymi",
   "main": "index.js",
   "dependencies": {
-    "eventbusjs": "^0.2.0",
-    "hapi": "^16.1.1",
-    "inert": "^4.1.0",
-    "mongodb": "^2.2.27",
-    "mongoose": "^4.10.2",
-    "pug": "^2.0.0-rc.1",
-    "request": "^2.81.0",
-    "request-promise": "^4.2.1",
-    "rest-hapi": "^0.15.4",
-    "socket.io": "^2.0.1",
-    "vision": "^4.1.1",
     "@angular/common": "~2.4.0",
     "@angular/compiler": "~2.4.0",
     "@angular/core": "~2.4.0",
@@ -25,13 +14,25 @@
     "@angular/router": "~3.4.0",
     "angular-in-memory-web-api": "~0.2.4",
     "core-js": "^2.4.1",
+    "eventbusjs": "^0.2.0",
     "glue": "^4.0.0",
     "good": "^7.1.0",
     "good-console": "^6.2.0",
     "good-squeeze": "^5.0.1",
+    "hapi": "^16.1.1",
     "hoek": "^4.1.0",
+    "inert": "^4.1.0",
+    "joi": "^10.6.0",
+    "mongodb": "^2.2.27",
+    "mongoose": "^4.10.2",
+    "pug": "^2.0.0-rc.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "rest-hapi": "^0.15.4",
     "rxjs": "5.0.1",
+    "socket.io": "^2.0.1",
     "systemjs": "0.19.40",
+    "vision": "^4.1.1",
     "zone.js": "^0.7.4"
   },
   "devDependencies": {
@@ -46,13 +47,15 @@
     "rimraf": "^2.5.4",
     "@types/node": "^6.0.46"
   },
+
   "scripts": {
     "start": "npm run tsc:projects && npm-run-all --parallel tsc:projectsw start:server ",
     "start:server": "nodemon server.js",
     "lint": "tslint ./app/**/*.ts -t verbose",
-    "tsc:projects": "tsc -p angular-quickstart",
-    "tsc:projectsw": "tsc -w -p angular-quickstart"
+    "tsc:projects": "tsc -p assets/angular/",
+    "tsc:projectsw": "tsc -w -p assets/angular/"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Aare-/DrzewkaTurniejowe.git"

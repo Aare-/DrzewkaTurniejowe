@@ -6,7 +6,10 @@ const Server = new Hapi.Server();
 const Mongoose = require('mongoose');
 const RestHapi = require('rest-hapi');
 const Good = require('good');
-const AngularQuickstart = require('./angular-quickstart');
+const AdminPanel = require('./app/plugins/admin_panel');
+const MainPage = require('./app/plugins/main_page');
+const TreeViewer = require('./app/plugins/tree_viewer');
+const Inert = require('inert');
 
 Mongoose
     .connection
@@ -22,6 +25,8 @@ Server.connection({
     host: 'localhost',
 		router:{stripTrailingSlash: true},
     labels: ['app'] });
+
+Server.register(Inert, () => {});
 
 RestHapi.config = {
     appTitle: "Drzewka Turniejowe",
@@ -56,9 +61,19 @@ appServer
          },
 
         // my plugins
-            {
-            register: AngularQuickstart
-            }
+        {
+            register: MainPage
+        },
+
+        {
+            register: AdminPanel,
+            routes: { prefix: '/admin' }
+        },
+
+        {
+            register: TreeViewer,
+            routes: { prefix: '/spectate' }
+        }
         ],
 
         (err) => {
@@ -68,6 +83,7 @@ appServer
 
             Server.start((err) => {
                 if (err) throw err;
+
                 console.log(`App server running at: ${appServer.info.uri}`);
             });
         }
