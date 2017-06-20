@@ -15,7 +15,10 @@ module.exports = function (mongoose) {
 
         Password: {
             type: Types.String,
-            required: true
+            required: true,
+            exclude: true,
+            allowOnUpdate: false
+
         }
 
     });
