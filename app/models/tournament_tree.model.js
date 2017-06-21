@@ -34,11 +34,15 @@ module.exports = function (mongoose) {
             type: Types.String,
             required: true,
             unique: true
-        },
+        }
 
     }],
 
     TreeNodes: [ {
+
+        NodePos : {
+            type: Types.Number
+        },
 
         Player1_id: {
             type: Types.String,
@@ -56,10 +60,6 @@ module.exports = function (mongoose) {
         Result: {
             type: Types.Number,
             default: 0
-        },
-
-        Note: {
-            type: Types.String
         },
 
         /*
@@ -85,8 +85,6 @@ module.exports = function (mongoose) {
 
                 const set_result_handler = function(request, reply) {
 
-                    console.log("updating!");
-
                     Tree.findOneAndUpdate(
                         {
                             _id : request.params._id,
@@ -95,12 +93,48 @@ module.exports = function (mongoose) {
                         {
                             $set: {
                                 "TreeNodes.$.Result" : request.payload.Result,
-                                "TreeNodes.$.Note" : request.payload.Note,
                             }
                         })
                         .then(function(result) {
-                            console.log(" - Done! result: "+result);
+                            return Tree.find(
+                                {
+                                    _id : request.params._id,
+                                },
+                                {
+                                    TreeNodes: { $elemMatch: { '_id': request.params._id_node} }
+                                });
+                        })
+                        .then(function(result) {
+                            if(result[0].TreeNodes[0].NextTreeNode_id === 0) {
+                                return reply();
+                            }
 
+                            let winnerId = null;
+
+                            if(request.payload.Result === 1) {
+                                winnerId = result[0].TreeNodes[0].Player1_id;
+
+                            } else if (request.payload.Result === 2) {
+                                winnerId = result[0].TreeNodes[0].Player2_id;
+                            }
+
+                            if(result[0].TreeNodes[0].NodePos % 2 === 0) {
+                                return Tree.findOneAndUpdate(
+                                    {   _id : request.params._id,
+                                        "TreeNodes._id" : result[0].TreeNodes[0].NextTreeNode_id },
+                                    {
+                                        $set : { "TreeNodes.$.Player1_id" : winnerId }
+                                    });
+                            } else {
+                                return Tree.findOneAndUpdate(
+                                    {   _id : request.params._id,
+                                        "TreeNodes._id" : result[0].TreeNodes[0].NextTreeNode_id },
+                                    {
+                                        $set : { "TreeNodes.$.Player2_id" : winnerId }
+                                    });
+                            }
+                        })
+                        .then(function(result) {
                             reply();
                         })
                         .catch(function(error) {
@@ -129,17 +163,11 @@ module.exports = function (mongoose) {
                             payload: {
                                 Result:
                                     Joi.number()
-                                       .required()
-                                       .integer()
-                                       .greater(-1)
-                                       .less(3)
-                                       .description("Result of the match where 0 is undecided, 1 is player 1 won, 2 is player 2 won"),
-
-                                Note:
-                                    Joi.string()
-                                        .max(128)
-                                        .truncate()
-                                        .description("Optional note - max 128 characters"),
+                                        .required()
+                                        .integer()
+                                        .greater(-1)
+                                        .less(3)
+                                        .description("Result of the match where 0 is undecided, 1 is player 1 won, 2 is player 2 won"),
                             }
                         },
                         plugins: {
@@ -162,17 +190,20 @@ module.exports = function (mongoose) {
                 const Tree = model;
 
                 const add_participant_handler = function(request, reply) {
-                    console.log("Adding participant to tree: "+request.params._id);
+
 
                     Tree.findOneAndUpdate(
-                            { _id : request.params._id},
-                            { $push: { Participants : request.payload }} )
+                        { _id : request.params._id,
+                          'Participants.EmailAddress': { $ne: request.payload.EmailAddress } },
+                        { $push: { Participants : request.payload }} )
                         .then(function(result) {
-                            console.log(" - Done!");
+                            if(result == null)
+                                return reply(Boom.conflict("Duplicate email adress"));
 
                             reply();
                         })
                         .catch(function(error) {
+                            console.log("ERR: "+error);
                             return reply(Boom.badImplementation('There was an error accessing the database.'));
                         });
                 };
@@ -194,14 +225,14 @@ module.exports = function (mongoose) {
                             payload: {
                                 DisplayName:
                                     Joi.string()
-                                       .required()
-                                       .description("Nickname of the participant"),
+                                        .required()
+                                        .description("Nickname of the participant"),
 
                                 EmailAddress:
                                     Joi.string()
-                                       .email()
-                                       .required()
-                                       .description("Email adress of the participant")
+                                        .email()
+                                        .required()
+                                        .description("Email adress of the participant")
 
                             }
                         },
@@ -224,7 +255,17 @@ module.exports = function (mongoose) {
                 const Tree = model;
 
                 const del_participant_handler = function(request, reply) {
-                    reply();
+                    Tree.findOneAndUpdate(
+                        { _id: request.params._id },
+                        { $pull: {
+                            Participants : { EmailAddress : request.params._email }
+                        }})
+                        .then(function(result) {
+                            reply();
+                        })
+                        .catch(function(error) {
+                            return reply(Boom.badImplementation('There was an error accessing the database.'));
+                        });
                 };
 
                 server.route({
@@ -266,7 +307,116 @@ module.exports = function (mongoose) {
                 const Tree = model;
 
                 const build_tree = function(request, reply) {
-                    reply();
+                    var base_tree_level = new Array();
+                    var treeId = { _id : request.params._id };
+                    var pLength;
+
+                    Tree.findOneAndUpdate(
+                        treeId,
+                        { $set : { TreeNodes : [] }})
+                        .then(function(result) {
+                            var participants = result.Participants.slice();
+
+                            // shuffling the array of participants
+                            for (var i = participants.length - 1; i > 0; i--) {
+                                var j = Math.floor(Math.random() * (i + 1));
+                                var temp = participants[i];
+                                participants[i] = participants[j];
+                                participants[j] = temp;
+                            }
+
+                            pLength = participants.length;
+                            var tmp = 1;
+                            while(tmp < pLength)
+                                tmp *= 2;
+                            pLength = tmp;
+                            var nodeCounter = 0;
+
+                            for(var i = 0; i < pLength; i+= 2) {
+                                var playerId1 = null;
+                                var playerId2 = null;
+                                var result = 1;
+
+                                // when enough participants, add new node
+                                if (i < participants.length) {
+                                    playerId1 = participants[ i ]._id;
+                                    result = 1;
+                                }
+                                if(i + 1 < participants.length) {
+                                    playerId2 = participants[ i + 1 ]._id;
+                                    result = 0;
+                                }
+
+                                base_tree_level.push({
+                                    NodePos: nodeCounter,
+                                    Player1_id : playerId1,
+                                    Player2_id : playerId2,
+                                    Result: result,
+                                    NextTreeNode_id: 0
+                                });
+
+                                nodeCounter++;
+                            }
+
+                            let emptyNodes = new Array();
+                            for(let i = 0; i < base_tree_level.length - 1; i++) {
+                                emptyNodes.push({
+                                    NodePos: nodeCounter,
+                                    Player1_id: null,
+                                    Player2_id: null,
+                                    Result: 0
+                                })
+                                nodeCounter++;
+                            }
+
+                            //update empty nodes to automatically has the correct player set
+                            for(let i = 0; i < base_tree_level.length; i++)
+                                if(base_tree_level[i].Result === 1)
+                                    if(base_tree_level[i].NodePos % 2 === 0) {
+                                        emptyNodes[Math.floor(i / 2)].Player1_id =
+                                            base_tree_level[i].Player1_id;
+                                    } else {
+                                        emptyNodes[Math.floor(i / 2)].Player2_id =
+                                            base_tree_level[i].Player1_id;
+                                    }
+
+                            return Tree.findOneAndUpdate(
+                                treeId,
+                                {
+                                    $push : {
+                                        TreeNodes : { $each: base_tree_level.concat(emptyNodes) }
+                                    }
+                                }
+                            )
+                        }).then(function(result) {
+                            return Tree.findOne(treeId);
+                        }).then(function(result) {
+
+                            var tLen = 0;
+                            var cLen = pLength / 2;
+                            var setObj = {};
+
+                            while(cLen > 1) {
+                                for (var i = 0; i < cLen; i++) {
+                                    var pos = i + tLen;
+                                    var refPos = tLen + cLen + Math.floor(i / 2);
+
+                                    setObj["TreeNodes."+pos+".NextTreeNode_id"] = result.TreeNodes[refPos]._id;
+                                }
+
+                                tLen += cLen;
+                                cLen = cLen / 2;
+                            }
+
+                            return Tree.findOneAndUpdate(
+                                treeId,
+                                { $set: setObj });
+                        }).then(function(result) {
+                            reply();
+                        })
+                        .catch(function(err) {
+                            return reply(Boom.badImplementation('There was an error accessing the database. '));
+                        });
                 };
 
                 server.route({
