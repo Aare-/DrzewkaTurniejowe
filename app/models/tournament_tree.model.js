@@ -12,8 +12,7 @@ module.exports = function (mongoose) {
       
     TreeName: {
         type: Types.String,
-        required: true,
-        unique: true
+        required: true
     },
 
     Owner: {
@@ -489,7 +488,53 @@ module.exports = function (mongoose) {
                         }
                     }
                 });
+            },
+
+            // get all trees that belong to user
+            function (server, model, options, Log) {
+                const Tree = model;
+
+                const get_nodes = function(request, reply) {
+                    Tree.find(
+                        { Owner : request.params._id }
+                        )
+                        .then(function(result) {
+                            reply(result);
+                        })
+                        .catch(function(error) {
+                            return reply(Boom.badImplementation('There was an error accessing the database.'));
+                        });
+                };
+
+                server.route({
+                    method: 'GET',
+                    path: '/Tree/User/{_id}',
+                    config: {
+                        handler: get_nodes,
+                        auth: null,
+                        description: 'Returns trees that belong to the given user',
+                        tags: ['api'],
+                        validate: {
+                            params: {
+                                _id: Joi
+                                    .objectId()
+                                    .required()
+                            }
+                        },
+                        plugins: {
+                            'hapi-swagger': {
+                                responseMessages: [
+                                    {code: 200, message: 'Success'},
+                                    {code: 400, message: 'Bad Request'},
+                                    {code: 404, message: 'Not Found'},
+                                    {code: 500, message: 'Internal Server Error'}
+                                ]
+                            }
+                        }
+                    }
+                });
             }
+
         ]
 
     }
