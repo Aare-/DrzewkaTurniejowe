@@ -15,11 +15,13 @@ let ApiTestComponent = class ApiTestComponent {
         this.treeService = treeService;
         this.output = 'test message';
         this.error = 'test error';
-        this.SAMPLETREE = {
-            TreeName: "a test sample tree",
-            Owner: "a test sample owner"
-        };
     }
+    sampletree() {
+        let tree = { TreeName: "a test sample tree" + Math.random(),
+            Owner: "a test sample owner" + Math.random() };
+        return tree;
+    }
+    ;
     printOutput(output) {
         //console.log(output);
         this.output = JSON.stringify(output);
@@ -50,7 +52,7 @@ ApiTestComponent = __decorate([
         template: `<h1>REST API testing grounds</h1>
 	<button (click)="getAllTrees()"> get all trees </button>
 	<button (click)="getTreeById('594bc296eb5be01264c905ae')"> get sample tree </button>
-	<button (click)="postTree(SAMPLETREE)"> post sample tree </button>
+	<button (click)="postTree(sampletree())"> post sample tree </button>
 	<h4>output:<h4>
 	<p>{{output}}</p>
 	<h4>error:<h4>

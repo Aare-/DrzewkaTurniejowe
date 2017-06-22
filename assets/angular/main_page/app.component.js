@@ -21,7 +21,7 @@ AppComponent = __decorate([
    <nav>
      <a routerLink="/home">home</a>
      <a routerLink="/browse">browse</a>
-     <a routerLink="/browse">register</a>
+     <a routerLink="/register">register</a>
      <a routerLink="/browse">view/0</a>
      <a routerLink="/test">test</a>
    </nav>

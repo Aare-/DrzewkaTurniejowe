@@ -1,83 +1,85 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http,Response } from '@angular/http';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { Headers, RequestOptions } from '@angular/http';
+import { Jsonp, URLSearchParams } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import {UserInterface} from '../util/user-interface';
 
-import {RegisterInterface} from '../util/register-interface';
-import { LoginInterface} from '../util/login-interface';
 
-//TEMP
-const USERS:RegisterInterface[] =
-	[
-		{
-		username:"username_1",
-		password:"password_1",
-		email:"username_1@mail.com"
-		},
-		{
-		username:"username_2",
-		password:"password_2",
-		email:"username_3@mail.com"
-		},
-		{
-		username:"username_3",
-		password:"password_3",
-		email:"username_3@mail.com"
-		}
-	]
-//TEMP
-const CURRENTUSER:LoginInterface = {username:"username_1",password:"password_1"}
 
 @Injectable()
 export class AuthService
 	{
-	constructor(private http: Http) { }
-
-	//function for simulating server answer. 90%chance of success, returns observable
-	randomServerAnswer(res:any,rej:any):Promise<any>
+	currentUserId:string = "";
+	constructor(private http: Http)
 		{
-		let p = new Promise((resolve,reject)=>
+		}
+
+
+	//requires user interface with email and password
+	register(user:UserInterface):Promise<any[]>
+		{
+		let newuser = {Email:user.email,Password:user.password};
+	  let headers = new Headers({ 'Content-Type': 'application/json' });
+	  let options = new RequestOptions({ headers: headers });
+ 		return this.http.post('/rest/User', newuser, options).toPromise();
+	  }
+
+	//requires user interface with email and password
+	//This is an awfull bootleg and should not live. Harken ye who have ears.
+	login(user:UserInterface):Promise<any>
+		{
+		let params = new URLSearchParams;
+		params.set("Email",user.email);
+		params.set("Password",user.password);
+		let self = this;
+		let promise = new Promise((res,rej)=>
 			{
-			let chance = Math.random();
-			if (chance < 0.9)
-				{setTimeout(()=>{resolve(res)},50)}
-			else
-				{setTimeout(()=>{reject(rej)},50)}
+			this.http.get('/rest/User', {search:params}).toPromise()
+			.then
+				(
+				value =>
+					{ console.log("printing response"); console.log(value.json());
+					if(value.json().docs.length > 0)
+						{
+						self.currentUserId = user.email;
+						res(null)
+						}
+					else
+						{rej("wrong username or password")}
+					}
+				)
+			.catch
+				(
+				value =>
+					{rej("database error")}
+				);
 			});
-		return p;
-		}
-
-	currentUser:string
-	successMessage:string
-	errorMessage:string
-
-	//registering user
-	register(userData:RegisterInterface):void
-		{
-		//server api does not exist yet
-		this.randomServerAnswer({success:"user register, proceed to login"}, {error:"registration error"}).then(
-			successMessage => this.successMessage = successMessage,
-			error =>  this.errorMessage = this.errorMessage);
-		}
-
-	//logging user in
-	login(userData:LoginInterface):void
-		{
-		//server api does not exist yet
-		this.randomServerAnswer({username:"username_1"},{error:"login error"}).then(
-			success => {this.successMessage = "succesfully logged in"; this.currentUser=success.username},
-			error =>  this.errorMessage = this.errorMessage);
-		}
-
-	//logging user in
-	authUser(username:string):void
-		{
-		//server api does not exist yet
-		this.randomServerAnswer({username:"username_1"},{error:"login error"}).then(
-			success => {this.successMessage = "succesfully authenticated"; this.currentUser=success.username},
-			error =>  this.errorMessage = this.errorMessage);
-		}
-	
+		return promise;
 	}
+
+	checkAuth():Promise<any>
+	{
+	let self = this;
+	return new Promise((res,rej) =>
+		{
+		if(self.currentUserId){res(self.currentUserId)}
+		else{rej(null)}
+		});
+	}
+	logout():Promise<any>
+	{
+	let self = this;
+	return new Promise((res,rej) =>
+		{
+		self.currentUserId = "";
+		res(self.currentUserId);
+		});
+	}
+}
