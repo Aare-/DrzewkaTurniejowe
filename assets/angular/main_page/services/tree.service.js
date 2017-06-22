@@ -14,7 +14,7 @@ require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 const http_2 = require('@angular/http');
 const Observable_1 = require('rxjs/Observable');
-require('rxjs/add/observable/fromPromise');
+require('rxjs/add/observable/throw');
 let TreeService = class TreeService {
     //!!!!!!!
     //api is incomplete
@@ -32,8 +32,18 @@ let TreeService = class TreeService {
     }
     //helper method
     handleError(error) {
-        console.error(error);
-        return Observable_1.Observable.throw(error);
+        // In a real world app, you might use a remote logging infrastructure
+        let errMsg;
+        if (error instanceof http_1.Response) {
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        }
+        else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error(errMsg);
+        return Observable_1.Observable.throw(errMsg);
     }
     // Get all Trees from the API
     getTree() {

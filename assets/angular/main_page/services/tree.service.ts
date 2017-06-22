@@ -3,10 +3,9 @@ import { Http,Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Headers, RequestOptions } from '@angular/http';
-
-
+import { Jsonp, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/throw';
 
 import {TreeInterface} from '../util/tree-interface';
 
@@ -32,12 +31,23 @@ export class TreeService
 		    return body || { };
 		}
 	//helper method
-  private handleError (error: Response | any)
+private handleError (error: Response | any)
+{
+  // In a real world app, you might use a remote logging infrastructure
+  let errMsg: string;
+  if (error instanceof Response)
 		{
-
-    console.error(error);
-    return Observable.throw(error);
+    const body = error.json() || '';
+    const err = body.error || JSON.stringify(body);
+    errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
   	}
+	else
+		{
+    errMsg = error.message ? error.message : error.toString();
+  	}
+  console.error(errMsg);
+  return Observable.throw(errMsg);
+}
 
 
 	// Get all Trees from the API

@@ -15,13 +15,17 @@ let ApiTestComponent = class ApiTestComponent {
         this.treeService = treeService;
         this.output = 'test message';
         this.error = 'test error';
+        this.SAMPLETREE = {
+            TreeName: "a test sample tree",
+            Owner: "a test sample owner"
+        };
     }
     printOutput(output) {
         //console.log(output);
         this.output = JSON.stringify(output);
     }
     printError(error) {
-        this.error = error;
+        this.error = JSON.stringify(error);
     }
     getAllTrees() {
         console.log("button for getTree pressed");
@@ -34,7 +38,8 @@ let ApiTestComponent = class ApiTestComponent {
             .subscribe(heroes => this.printOutput(heroes), error => this.printError(error));
     }
     postTree(tree) {
-        console.log("button for getTreeByID pressed");
+        console.log("button for postTree pressed");
+        console.log(tree);
         this.treeService.postTree(tree)
             .subscribe(heroes => this.printOutput(heroes), error => this.printError(error));
     }
@@ -44,9 +49,8 @@ ApiTestComponent = __decorate([
         selector: 'api-test',
         template: `<h1>REST API testing grounds</h1>
 	<button (click)="getAllTrees()"> get all trees </button>
-	<button (click)="addSampleTree()"> add sample tree </button>
-	<button (click)="getTreeById('5947b4c7b5fb3239196c7880')"> get sample tree </button>
-	<button (click)="postTree('SAMPLETREE')"> post sample tree </button>
+	<button (click)="getTreeById('594bc296eb5be01264c905ae')"> get sample tree </button>
+	<button (click)="postTree(SAMPLETREE)"> post sample tree </button>
 	<h4>output:<h4>
 	<p>{{output}}</p>
 	<h4>error:<h4>
@@ -56,10 +60,4 @@ ApiTestComponent = __decorate([
     __metadata('design:paramtypes', [tree_service_1.TreeService])
 ], ApiTestComponent);
 exports.ApiTestComponent = ApiTestComponent;
-const SAMPLETREE = {
-    TreeName: "a test sample tree",
-    Owner: "a test sample owner",
-    Participants: "test sample participants",
-    TreeNodes: "test sample nodes"
-};
 //# sourceMappingURL=api-test.component.js.map

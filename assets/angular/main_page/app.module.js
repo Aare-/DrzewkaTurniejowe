@@ -30,6 +30,7 @@ AppModule = __decorate([
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
             http_1.HttpModule,
+            http_1.JsonpModule,
             router_1.RouterModule.forRoot([
                 {
                     path: '',

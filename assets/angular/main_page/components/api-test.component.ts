@@ -8,9 +8,8 @@ import {TreeInterface} from '../util/tree-interface'
   selector: 'api-test',
   template: `<h1>REST API testing grounds</h1>
 	<button (click)="getAllTrees()"> get all trees </button>
-	<button (click)="addSampleTree()"> add sample tree </button>
-	<button (click)="getTreeById('5947b4c7b5fb3239196c7880')"> get sample tree </button>
-	<button (click)="postTree('SAMPLETREE')"> post sample tree </button>
+	<button (click)="getTreeById('594bc296eb5be01264c905ae')"> get sample tree </button>
+	<button (click)="postTree(SAMPLETREE)"> post sample tree </button>
 	<h4>output:<h4>
 	<p>{{output}}</p>
 	<h4>error:<h4>
@@ -22,6 +21,11 @@ export class ApiTestComponent
 constructor(private treeService:TreeService){}
 output = 'test message';
 error = 'test error';
+SAMPLETREE:TreeInterface =
+	{
+	TreeName: "a test sample tree",
+	Owner: "a test sample owner"
+	};
 printOutput(output:any):void
 	{
 	//console.log(output);
@@ -29,7 +33,7 @@ printOutput(output:any):void
 	}
 printError(error:any):void
 	{
-	this.error = error;
+	this.error = JSON.stringify(error);
 	}
 getAllTrees():void
 	{
@@ -50,19 +54,11 @@ getTreeById(treeId:string):void
 
 postTree(tree:TreeInterface):void
 	{
-	console.log("button for getTreeByID pressed")
+	console.log("button for postTree pressed");
+	console.log(tree);
   this.treeService.postTree(tree)
                    .subscribe(
                      heroes => this.printOutput(heroes),
                      error =>  this.printError(error));
 	}
 }
-
-
-const SAMPLETREE:TreeInterface =
-	{
-	TreeName: "a test sample tree",
-	Owner: "a test sample owner",
-	Participants: "test sample participants",
-	TreeNodes: "test sample nodes"
-	}
