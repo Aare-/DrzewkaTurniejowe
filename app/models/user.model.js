@@ -28,42 +28,6 @@ module.exports = function (mongoose) {
     Schema.statics = {
         collectionName: modelName,
         routeOptions: {
-            extraEndpoints: [
-                // find by email
-                function (server, model, options, Log) {
-                    const User = model;
-
-                    const log_in_handler = function(request, reply) {
-                        User.findOne( { Email: request.params._email} )
-                            .then(function(response) {
-                                return reply(response);
-                            })
-                            .catch(function(error) {
-                                return reply(Boom.badImplementation('There was an error accessing the database.'));
-                            });
-                    };
-
-                    server.route({
-                        method: 'GET',
-                        path: '/User/Email/{_email}',
-                        config: {
-                            handler: log_in_handler,
-                            auth: null,
-                            description: 'Get user by his email',
-                            tags: ['api'],
-                            validate: {
-                                params: {
-                                    _email: Joi
-                                        .string()
-                                        .email()
-                                        .required(),
-                                }
-                            }
-                        }
-                    });
-
-                },
-            ]
             /*extraEndpoints: [
 
                 // log in
