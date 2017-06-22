@@ -1,52 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http,Response } from '@angular/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { Headers, RequestOptions } from '@angular/http';
+
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 
 import {TreeInterface} from '../util/tree-interface';
 
-const SampleTree : TreeInterface =
-  {
-     TreeName :  "tree_0" ,
-     Participants :  "participants" ,
-     TreeNodes :  "nodes" ,
-     _id :  "0" ,
-     createdAt :  new Date("2017-06-18")  ,
-     updatedAt :  new Date("2017-06-18")
-  }
-
-const SampleTreeList =[
-  {
-     TreeName :  "tree_0" ,
-     Participants :  "participants" ,
-     TreeNodes :  "nodes" ,
-     _id :  "0" ,
-     createdAt :  new Date("2017-06-18")  ,
-     updatedAt :  new Date("2017-06-18")
-  },
-  {
-     TreeName :  "tree_1" ,
-     Participants :  "participants" ,
-     TreeNodes :  "nodes" ,
-     _id :  "1" ,
-     createdAt :  new Date("2017-06-18")  ,
-     updatedAt :  new Date("2017-06-18")
-  },
-]
-
-const SampleError = {
-   statusCode : 400,
-   error :  "Bad Request" ,
-   message :  ["sample_err_message "],
-   validation : {
-     source :  "payload" ,
-     keys : [
-       "value"
-    ]
-  }
-}
 
 
 
@@ -59,60 +22,54 @@ export class TreeService
 	//currently we have problems with database, as it teoertically exists, it only spews errors. Its not my problem - ill have to inform about it, and work around it.
 	//so this service will be acting as a stub
 
-	 constructor(private http: Http) { }
+	constructor(private http: Http) { }
 
-	//function simulating server randomly answering calls. returns an Observable with 90% chance of resolving and 10% rejecting in 50 miliseconds
-	randomServerAnswer(res:any,rej:any):Promise<any>
+	//helper method, for extracting data in response._body.docs
+	private extractData(res: Response)
 		{
-		let p = new Promise((resolve,reject)=>
-			{
-			let chance = Math.random();
-			if (chance < 0.9)
-				{setTimeout(()=>{resolve(res)},50)}
-			else
-				{setTimeout(()=>{reject(rej)},50)}
-			});
+				console.log(res.json());
+		    let body = res.json();
+		    return body || { };
+		}
+	//helper method
+  private handleError (error: Response | any)
+		{
 
-		return p;
+    console.error(error);
+    return Observable.throw(error);
+  	}
+
+
+	// Get all Trees from the API
+	getTree():Observable<any[]>
+		{
+	  //return this.http.get('/rest/Tree');
+    return this.http.get('/rest/Tree')
+                    .map(this.extractData)
+                    .catch(this.handleError);
+	  }
+
+	// post new tree to the API. tree cant have id, createdAt and updatedAt
+	postTree(tree:TreeInterface):Observable<any[]>
+		{
+	  let headers = new Headers({ 'Content-Type': 'application/json' });
+	  let options = new RequestOptions({ headers: headers });
+
+	  return this.http.post('/rest/Tree', tree, options)
+	                  .map(this.extractData)
+	                  .catch(this.handleError);
 		}
 
-		//generally this should be handling promises or sumthin'
 
-	  // Get all Trees from the API
-	 getTree():Promise<TreeInterface[]>
+
+	//Get tree given it's id string
+	getTreeById(treeId:string):Observable<any[]>
 		{
-	   //return this.http.get('/rest/Tree');
-		return this.randomServerAnswer(SampleTreeList,SampleError);
-	  }
-		//deletes one or more trees from API
-	 deleteTree(tree:any[]):Promise<TreeInterface[]>
-		{
-	  //return this.http.delete('/rest/Tree');
-		return this.randomServerAnswer(SampleTreeList,SampleError);
-	  }
-		//deletes one or more trees from API
-	 postTree(tree:any[]):Promise<TreeInterface[]>
-		{
-	  //return this.http.post('/rest/Tree');
-		return this.randomServerAnswer(SampleTreeList,SampleError);
+	  //return this.http.get('/rest/Tree');
+    return this.http.get('/rest/Tree/'+treeId)
+                    .map(this.extractData)
+                    .catch(this.handleError);
 	  }
 
-	  // Get Tree by ID
-	 getTreeID(id:string):Promise<TreeInterface>
-		{
-	   //return this.http.get('/rest/Tree/'+id);
-		return this.randomServerAnswer(SampleTree,SampleError);
-	  }
-		//deletes one or more trees from API
-	 deleteTreeID(id:string):Promise<TreeInterface>
-		{
-	  //return this.http.delete('/rest/Tree/'+id);
-		return this.randomServerAnswer(SampleTree,SampleError);
-	  }
-		//deletes one or more trees from API
-	 postTreeID(id:string):Promise<TreeInterface>
-		{
-	  //return this.http.post('/rest/Tree/'+id);
-		return this.randomServerAnswer(SampleTree,SampleError);
-	  }
+
 	}

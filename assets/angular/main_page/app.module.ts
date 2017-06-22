@@ -42,8 +42,12 @@ import {AuthService} from './services/auth.service';
         	component: HomeComponent
       	},
 				{
-				  path: 'detail/:id',
+				  path: 'view/:id',
 				  component: ViewComponent
+				},
+				{
+				  path: 'test',
+				  component: ApiTestComponent
 				},
     	])
 

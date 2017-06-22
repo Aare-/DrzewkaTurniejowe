@@ -49,8 +49,12 @@ AppModule = __decorate([
                     component: home_component_1.HomeComponent
                 },
                 {
-                    path: 'detail/:id',
+                    path: 'view/:id',
                     component: view_component_1.ViewComponent
+                },
+                {
+                    path: 'test',
+                    component: api_test_component_1.ApiTestComponent
                 },
             ])
         ],

@@ -13,22 +13,53 @@ const tree_service_1 = require('../services/tree.service');
 let ApiTestComponent = class ApiTestComponent {
     constructor(treeService) {
         this.treeService = treeService;
-        this.name = 'test api';
+        this.output = 'test message';
+        this.error = 'test error';
+    }
+    printOutput(output) {
+        //console.log(output);
+        this.output = JSON.stringify(output);
+    }
+    printError(error) {
+        this.error = error;
     }
     getAllTrees() {
         console.log("button for getTree pressed");
-        this.treeService.getTree().then(data => { console.log(data); });
+        this.treeService.getTree()
+            .subscribe(heroes => this.printOutput(heroes), error => this.printError(error));
+    }
+    getTreeById(treeId) {
+        console.log("button for getTreeByID pressed");
+        this.treeService.getTreeById(treeId)
+            .subscribe(heroes => this.printOutput(heroes), error => this.printError(error));
+    }
+    postTree(tree) {
+        console.log("button for getTreeByID pressed");
+        this.treeService.postTree(tree)
+            .subscribe(heroes => this.printOutput(heroes), error => this.printError(error));
     }
 };
 ApiTestComponent = __decorate([
     core_1.Component({
         selector: 'api-test',
-        template: `<h1>Hello {{name}}</h1>
+        template: `<h1>REST API testing grounds</h1>
 	<button (click)="getAllTrees()"> get all trees </button>
-	<button (click)="addSampleTree()"> get all trees </button>
+	<button (click)="addSampleTree()"> add sample tree </button>
+	<button (click)="getTreeById('5947b4c7b5fb3239196c7880')"> get sample tree </button>
+	<button (click)="postTree('SAMPLETREE')"> post sample tree </button>
+	<h4>output:<h4>
+	<p>{{output}}</p>
+	<h4>error:<h4>
+	<p>{{error}}</p>
 	`,
     }), 
     __metadata('design:paramtypes', [tree_service_1.TreeService])
 ], ApiTestComponent);
 exports.ApiTestComponent = ApiTestComponent;
+const SAMPLETREE = {
+    TreeName: "a test sample tree",
+    Owner: "a test sample owner",
+    Participants: "test sample participants",
+    TreeNodes: "test sample nodes"
+};
 //# sourceMappingURL=api-test.component.js.map

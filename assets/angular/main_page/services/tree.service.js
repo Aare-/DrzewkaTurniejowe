@@ -11,44 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 const core_1 = require('@angular/core');
 const http_1 = require('@angular/http');
 require('rxjs/add/operator/map');
+require('rxjs/add/operator/catch');
+const http_2 = require('@angular/http');
+const Observable_1 = require('rxjs/Observable');
 require('rxjs/add/observable/fromPromise');
-const SampleTree = {
-    TreeName: "tree_0",
-    Participants: "participants",
-    TreeNodes: "nodes",
-    _id: "0",
-    createdAt: new Date("2017-06-18"),
-    updatedAt: new Date("2017-06-18")
-};
-const SampleTreeList = [
-    {
-        TreeName: "tree_0",
-        Participants: "participants",
-        TreeNodes: "nodes",
-        _id: "0",
-        createdAt: new Date("2017-06-18"),
-        updatedAt: new Date("2017-06-18")
-    },
-    {
-        TreeName: "tree_1",
-        Participants: "participants",
-        TreeNodes: "nodes",
-        _id: "1",
-        createdAt: new Date("2017-06-18"),
-        updatedAt: new Date("2017-06-18")
-    },
-];
-const SampleError = {
-    statusCode: 400,
-    error: "Bad Request",
-    message: ["sample_err_message "],
-    validation: {
-        source: "payload",
-        keys: [
-            "value"
-        ]
-    }
-};
 let TreeService = class TreeService {
     //!!!!!!!
     //api is incomplete
@@ -58,49 +24,38 @@ let TreeService = class TreeService {
     constructor(http) {
         this.http = http;
     }
-    //function simulating server randomly answering calls. returns an Observable with 90% chance of resolving and 10% rejecting in 50 miliseconds
-    randomServerAnswer(res, rej) {
-        let p = new Promise((resolve, reject) => {
-            let chance = Math.random();
-            if (chance < 0.9) {
-                setTimeout(() => { resolve(res); }, 50);
-            }
-            else {
-                setTimeout(() => { reject(rej); }, 50);
-            }
-        });
-        return p;
+    //helper method, for extracting data in response._body.docs
+    extractData(res) {
+        console.log(res.json());
+        let body = res.json();
+        return body || {};
     }
-    //generally this should be handling promises or sumthin'
+    //helper method
+    handleError(error) {
+        console.error(error);
+        return Observable_1.Observable.throw(error);
+    }
     // Get all Trees from the API
     getTree() {
         //return this.http.get('/rest/Tree');
-        return this.randomServerAnswer(SampleTreeList, SampleError);
+        return this.http.get('/rest/Tree')
+            .map(this.extractData)
+            .catch(this.handleError);
     }
-    //deletes one or more trees from API
-    deleteTree(tree) {
-        //return this.http.delete('/rest/Tree');
-        return this.randomServerAnswer(SampleTreeList, SampleError);
-    }
-    //deletes one or more trees from API
+    // post new tree to the API. tree cant have id, createdAt and updatedAt
     postTree(tree) {
-        //return this.http.post('/rest/Tree');
-        return this.randomServerAnswer(SampleTreeList, SampleError);
+        let headers = new http_2.Headers({ 'Content-Type': 'application/json' });
+        let options = new http_2.RequestOptions({ headers: headers });
+        return this.http.post('/rest/Tree', tree, options)
+            .map(this.extractData)
+            .catch(this.handleError);
     }
-    // Get Tree by ID
-    getTreeID(id) {
-        //return this.http.get('/rest/Tree/'+id);
-        return this.randomServerAnswer(SampleTree, SampleError);
-    }
-    //deletes one or more trees from API
-    deleteTreeID(id) {
-        //return this.http.delete('/rest/Tree/'+id);
-        return this.randomServerAnswer(SampleTree, SampleError);
-    }
-    //deletes one or more trees from API
-    postTreeID(id) {
-        //return this.http.post('/rest/Tree/'+id);
-        return this.randomServerAnswer(SampleTree, SampleError);
+    //Get tree given it's id string
+    getTreeById(treeId) {
+        //return this.http.get('/rest/Tree');
+        return this.http.get('/rest/Tree/' + treeId)
+            .map(this.extractData)
+            .catch(this.handleError);
     }
 };
 TreeService = __decorate([
