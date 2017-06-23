@@ -11,6 +11,8 @@ import { LoginInfoComponent }  from './components/login-info/login-info.componen
 import { ViewComponent }  from './components/view/view.component';
 import { BrowseComponent }  from './components/browse/browse.component';
 import { HomeComponent }  from './components/home/home.component';
+import { TreeListComponent }  from './components/tree-list/tree-list.component';
+import { UserComponent }  from './components/user/user.component';
 
 import { TreeService }  from './services/tree.service';
 import {AuthService} from './services/auth.service';
@@ -50,6 +52,10 @@ import {AuthService} from './services/auth.service';
 				  path: 'test',
 				  component: ApiTestComponent
 				},
+				{
+					path: 'user/:email',
+					component: UserComponent
+				},
     	])
 
   	],
@@ -62,7 +68,9 @@ import {AuthService} from './services/auth.service';
 		LoginInfoComponent,
 		BrowseComponent,
 		ViewComponent,
-		HomeComponent
+		HomeComponent,
+		TreeListComponent,
+		UserComponent
 		],
   bootstrap:    [ AppComponent ]
 })

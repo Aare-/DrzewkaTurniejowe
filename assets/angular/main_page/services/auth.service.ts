@@ -17,6 +17,7 @@ import {UserInterface} from '../util/user-interface';
 export class AuthService
 	{
 	currentUserId:string = "";
+
 	constructor(private http: Http)
 		{
 		}
@@ -63,6 +64,8 @@ export class AuthService
 			});
 		return promise;
 	}
+
+
 
 	checkAuth():Promise<any>
 	{

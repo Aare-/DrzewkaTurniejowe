@@ -73,8 +73,8 @@ LoginInfoComponent = __decorate([
 
 		</div>
 		<div *ngIf="loggedIn" >
-			<div class="form-group text-info" >
-				logged in as: {{loggedIn}}
+			<div class="form-group" >
+				logged in as:<a [routerLink]="['/user', loggedIn]">{{loggedIn}}</a>
 			</div>
 			<!--<span class="alert alert-info">logged in as: {{loggedIn}}</span>-->
 			<button (click)="logout()" class="btn btn-default">log out</button>

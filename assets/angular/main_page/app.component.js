@@ -23,6 +23,7 @@ AppComponent = __decorate([
 				<li><a routerLink="/register">register</a></li>
 				<li><a routerLink="/browse">view/0</a></li>
 				<li><a routerLink="/test">test</a></li>
+
 			</ul>
 			<div class="nav navbar-nav navbar-right">
 				<login-info></login-info>

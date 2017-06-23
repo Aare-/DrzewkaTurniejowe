@@ -26,24 +26,29 @@ export class TreeService
 	//helper method, for extracting data in response._body.docs
 	private extractData(res: Response)
 		{
-				console.log(res.json());
+				//console.log(res);
+				//console.log(res.json());
 		    let body = res.json();
 		    return body || { };
 		}
+
 
 	//helper method
 private handleError (error: Response | any)
 {
   // In a real world app, you might use a remote logging infrastructure
+
   let errMsg: string;
   if (error instanceof Response)
 		{
+		console.log("this ???");
     const body = error.json() || '';
     const err = body.error || JSON.stringify(body);
     errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
   	}
 	else
 		{
+		console.log("that ???");
     errMsg = error.message ? error.message : error.toString();
   	}
   console.error(errMsg);
@@ -61,11 +66,11 @@ private handleError (error: Response | any)
 	  }
 
 	// post new tree to the API. tree cant have id, createdAt and updatedAt
-	postTree(tree:TreeInterface):Observable<any[]>
+	postTree(tree:any):Observable<any[]>
 		{
 	  let headers = new Headers({ 'Content-Type': 'application/json' });
 	  let options = new RequestOptions({ headers: headers });
-
+		console.log(tree);
 	  return this.http.post('/rest/Tree', tree, options)
 	                  .map(this.extractData)
 	                  .catch(this.handleError);
@@ -102,5 +107,45 @@ private handleError (error: Response | any)
 		return p;
 		}
 
+	addParticipantToTree(id:string,name:string,email:string):Observable<any[]>
+		{
+	  let headers = new Headers({ 'Content-Type': 'application/json' });
+	  let options = new RequestOptions({ headers: headers });
+		let participant ={DisplayName:name,EmailAddress:email};
+	  return this.http.post('/rest/Tree/'+id+"/AddParticipant", participant, options)
+	                  .map(res=>{return({});})
+	                  .catch(err=>{console.log(err);return Observable.throw(err);});
+	  }
+	removeParticipantFromTree(id:string,email:string):Observable<any[]>
+		{
+	  let headers = new Headers({ 'Content-Type': 'application/json' });
+	  let options = new RequestOptions({ headers: headers });
+		let params = new URLSearchParams;
+		options.search = params;
+		//params.set("_id",id);
+		params.set("_email",email);
+		console.log("almost removing");
+		console.log(email);
+	  return this.http.delete('/rest/Tree/'+id+'/Participant/'+encodeURI(email), options)
+	                  .map(res=>{return({});})
+	                  .catch(err=>{console.log(err);return Observable.throw(err);});
+	  }
+	removeTree(id:string)
+		{
+	  let headers = new Headers({ 'Content-Type': 'application/json' });
+	  let options = new RequestOptions({ headers: headers });
 
+	  return this.http.delete('/rest/Tree/'+id, options)
+	                  .map(res=>{return({});})
+	                  .catch(err=>{console.log(err);return Observable.throw(err);});
+	  }
+		buildTree(id:string):Observable<any[]>
+			{
+		  let headers = new Headers({ 'Content-Type': 'application/json' });
+		  let options = new RequestOptions({ headers: headers });
+
+		  return this.http.put('/rest/Tree/'+id+'/Build',{}, options)
+		                  .map(res=>{return({});})
+		                  .catch(res=>{return Observable.throw("database error")});
+			}
 	}

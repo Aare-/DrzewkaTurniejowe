@@ -20,6 +20,8 @@ const login_info_component_1 = require('./components/login-info/login-info.compo
 const view_component_1 = require('./components/view/view.component');
 const browse_component_1 = require('./components/browse/browse.component');
 const home_component_1 = require('./components/home/home.component');
+const tree_list_component_1 = require('./components/tree-list/tree-list.component');
+const user_component_1 = require('./components/user/user.component');
 const tree_service_1 = require('./services/tree.service');
 const auth_service_1 = require('./services/auth.service');
 let AppModule = class AppModule {
@@ -57,6 +59,10 @@ AppModule = __decorate([
                     path: 'test',
                     component: api_test_component_1.ApiTestComponent
                 },
+                {
+                    path: 'user/:email',
+                    component: user_component_1.UserComponent
+                },
             ])
         ],
         providers: [tree_service_1.TreeService, auth_service_1.AuthService],
@@ -67,7 +73,9 @@ AppModule = __decorate([
             login_info_component_1.LoginInfoComponent,
             browse_component_1.BrowseComponent,
             view_component_1.ViewComponent,
-            home_component_1.HomeComponent
+            home_component_1.HomeComponent,
+            tree_list_component_1.TreeListComponent,
+            user_component_1.UserComponent
         ],
         bootstrap: [app_component_1.AppComponent]
     }), 
