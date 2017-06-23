@@ -26,13 +26,11 @@ module.exports = function (mongoose) {
        */
     Participants: [ {
         DisplayName: {
-            type: Types.String,
+            type: Types.String
         },
 
         EmailAddress: {
-            type: Types.String,
-            required: true,
-            unique: true
+            type: Types.String
         }
 
     }],
@@ -189,7 +187,6 @@ module.exports = function (mongoose) {
                 const Tree = model;
 
                 const add_participant_handler = function(request, reply) {
-
 
                     Tree.findOneAndUpdate(
                         { _id : request.params._id,
