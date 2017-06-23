@@ -62,19 +62,24 @@ LoginInfoComponent = __decorate([
     core_1.Component({
         selector: 'login-info',
         template: `
-	<h2>mockup of login-info </h2>
-	<div *ngIf="!loggedIn">
-		<input type="email" [(ngModel)]="email" (change)="check_validity()">
-		<input type="password" [(ngModel)]="password" (change)="check_validity()">
-		<button (click)="login()" [disabled]="error" >Log in</button>
-		<div *ngIf="loginError" class="alert alert-danger">
-		{{loginError}}
+	<div class="form-group navbar-form">
+		<div *ngIf="!loggedIn">
+			<div *ngIf="loginError" class="form-group text-danger" >
+				{{loginError}}
+			</div>
+			<input type="email" [(ngModel)]="email" (change)="check_validity()" class="form-control" placeholder="example@mail.com">
+			<input  type="password" [(ngModel)]="password" (change)="check_validity()" class="form-control" placeholder="password">
+			<button (click)="login()" [disabled]="error" class="btn btn-default">Log in</button>
+
+		</div>
+		<div *ngIf="loggedIn" >
+			<div class="form-group text-info" >
+				logged in as: {{loggedIn}}
+			</div>
+			<!--<span class="alert alert-info">logged in as: {{loggedIn}}</span>-->
+			<button (click)="logout()" class="btn btn-default">log out</button>
 		</div>
 	</div>
-		<div *ngIf="loggedIn" class="alert alert-info">
-		logged in as: {{loggedIn}}
-		<button (click)="logout()">log out</button>
-		</div>
 	`,
     }), 
     __metadata('design:paramtypes', [auth_service_1.AuthService])

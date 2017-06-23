@@ -10,22 +10,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 const core_1 = require('@angular/core');
 let AppComponent = class AppComponent {
-    constructor() {
-        this.name = 'Angular';
-    }
 };
 AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
-        template: `<h1>Hello {{name}}</h1>
-   <nav>
-     <a routerLink="/home">home</a>
-     <a routerLink="/browse">browse</a>
-     <a routerLink="/register">register</a>
-     <a routerLink="/browse">view/0</a>
-     <a routerLink="/test">test</a>
+        template: `
+   <nav class="navbar navbar-default">
+  	<div class="container-fluid">
+			<ul class="nav navbar-nav">
+				<li><a routerLink="/home">home</a></li>
+				<li><a routerLink="/browse">browse</a></li>
+				<li><a routerLink="/register">register</a></li>
+				<li><a routerLink="/browse">view/0</a></li>
+				<li><a routerLink="/test">test</a></li>
+			</ul>
+			<div class="nav navbar-nav navbar-right">
+				<login-info></login-info>
+			</div>
+		</div>
    </nav>
-	<login-info></login-info>
+
 	<router-outlet></router-outlet>
 
 
