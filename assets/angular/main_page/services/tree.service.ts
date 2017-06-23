@@ -30,6 +30,7 @@ export class TreeService
 		    let body = res.json();
 		    return body || { };
 		}
+
 	//helper method
 private handleError (error: Response | any)
 {
@@ -80,6 +81,26 @@ private handleError (error: Response | any)
                     .map(this.extractData)
                     .catch(this.handleError);
 	  }
+
+	getTreesByParam(numPerPage:number,pageNum:number,owner:string=""):Promise<any>
+		{
+		let options = new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})});
+		let params = new URLSearchParams;
+		options.search = params;
+		params.set("$page",pageNum.toString());
+		params.set("$limit",numPerPage.toString());
+		params.set("$sort","-createdAt");
+		if(owner)
+			{		params.set("Owner",owner);}
+		let p = new Promise((res,rej)=>
+			{
+			 this.http.get('/rest/Tree',options).toPromise()
+				.then(value=>res(this.extractData(value)))
+				.catch(value=>rej(this.handleError(value)))
+			})
+
+		return p;
+		}
 
 
 	}

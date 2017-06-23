@@ -13,6 +13,7 @@ const http_1 = require('@angular/http');
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 const http_2 = require('@angular/http');
+const http_3 = require('@angular/http');
 const Observable_1 = require('rxjs/Observable');
 require('rxjs/add/observable/throw');
 let TreeService = class TreeService {
@@ -66,6 +67,23 @@ let TreeService = class TreeService {
         return this.http.get('/rest/Tree/' + treeId)
             .map(this.extractData)
             .catch(this.handleError);
+    }
+    getTreesByParam(numPerPage, pageNum, owner = "") {
+        let options = new http_2.RequestOptions({ headers: new http_2.Headers({ 'Content-Type': 'application/json' }) });
+        let params = new http_3.URLSearchParams;
+        options.search = params;
+        params.set("$page", pageNum.toString());
+        params.set("$limit", numPerPage.toString());
+        params.set("$sort", "-createdAt");
+        if (owner) {
+            params.set("Owner", owner);
+        }
+        let p = new Promise((res, rej) => {
+            this.http.get('/rest/Tree', options).toPromise()
+                .then(value => res(this.extractData(value)))
+                .catch(value => rej(this.handleError(value)));
+        });
+        return p;
     }
 };
 TreeService = __decorate([
