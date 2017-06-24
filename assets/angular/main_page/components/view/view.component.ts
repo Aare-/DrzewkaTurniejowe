@@ -24,7 +24,7 @@ import { Router } from '@angular/router';
 					</thead>
 					<tbody>
 						<tr *ngFor="let participant of tree.Participants">
-							<td>
+							<td *ngIf="tree.Owner==authService.currentUserId">
 								<button (click)="removeParticipant(participant.EmailAddress)" class ="btn btn-danger">remove</button>
 							</td>
 							<td>
@@ -36,6 +36,7 @@ import { Router } from '@angular/router';
 						</tr>
 					</tbody>
 				</table>
+				<div *ngIf="(tree.Participants.length==0) || !tree.Participants" class="alert alert-info"> There are not participants in this tree</div>
 				</div>
 				</div>
 				<div *ngIf="tree.Owner==authService.currentUserId">
@@ -48,26 +49,17 @@ import { Router } from '@angular/router';
 								<button (click)="addParticipant(emailinput.value,nameinput.value)" class="btn btn-default"> add</button>
 							</div>
 						</form>
-					</div>
-					<div class="well well-sm">
-						<h3>Remove tree:</h3>
+						<h3>Options:</h3>
 						<form class="form-inline">
 							<div class = "form-group">
+								<button (click)="buildTree()" class="btn btn-default"> Build/Rebuild tree</button>
 								<button (click)="removeTree()" class="btn btn-danger"> Remove tree</button>
-							</div>
-						</form>
-					</div>
-					<div class="well well-sm">
-						<h3>Build/Rebuild tree:</h3>
-						<form class="form-inline">
-							<div class = "form-group">
-								<button (click)="buildTree()" class="btn btn-default"> Build tree</button>
 							</div>
 						</form>
 					</div>
 				</div>
 				<div> <!-- here whall be built tree-->
-
+					<tree-view *ngIf="builtTree" [newNode]="builtTree" [tree]="tree"></tree-view>
 				</div>
 			</div>
 		</div>
@@ -83,6 +75,7 @@ export class ViewComponent implements OnInit, OnDestroy
 	private sub:any;
 	tree:any;
 	error:any;
+	builtTree:any;
 	ngOnInit():void
 		{
 		this.sub = this.activatedRoute.params.subscribe(params =>
@@ -99,9 +92,10 @@ export class ViewComponent implements OnInit, OnDestroy
 	refreshTree():void
 		{
 		this.treeService.getTreeById(this.id).subscribe(
-			tree=>{console.log(tree); this.tree =tree;},
+			tree=>{console.log(tree); this.tree =tree; this.builtTree=this.treeToDisplayableTree(tree); console.log(this.builtTree);},
 			error=>{console.log(error); this.error =error;}
 			);
+
 		}
 
 	addParticipant(email:string,name:string):void
@@ -133,12 +127,60 @@ export class ViewComponent implements OnInit, OnDestroy
 
 	buildTree():void
 		{
-		console.log("building tree");
+		//console.log("building tree");
 		this.treeService.buildTree(this.tree._id).subscribe(
 		response=>{ this.refreshTree();console.log(this.tree)},
 		error=>{console.log(error); this.error =error; this.refreshTree();}
 		);
 		}
-	
+
+	treeToDisplayableTree(tree:any):any
+		{
+		let newnodes:any[] = [];
+		let root:any;
+		for(let i of tree.TreeNodes)
+			{
+			let toPush = {children:<any[]>[],node:<any> i} ;
+
+			if(!i.NextTreeNode_id)
+				{
+				root=toPush;
+				}
+			else
+				{
+				newnodes.push(toPush);
+				}
+			}
+		//console.log(newnodes);
+		//console.log(root);
+		let reTreedNodes:any =newnodes;
+		//console.log(reTreedNodes);
+		reTreedNodes.push(root);
+
+		while(newnodes.length>1)
+			{
+			for(let i of newnodes)
+				{
+				for(let j of reTreedNodes)
+					{
+						//console.log("i and j");
+						//console.log(i);
+						//console.log(j);
+					if(i.node.NextTreeNode_id == j.node._id)
+						{
+
+						j.children.push(i);
+						newnodes = newnodes.filter(obj => obj !== i);
+						break;
+						//remove i from newnodes, break both for loops, not while loop
+						}
+					}
+				break;
+				}
+			}
+		//console.log("root:");
+		//console.log(root);
+		return(root);
+		}
 
 	}

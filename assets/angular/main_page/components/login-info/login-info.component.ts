@@ -71,5 +71,8 @@ export class LoginInfoComponent
 										.catch(value=>{this.checkAuth(); console.log("f");})
 		}
 
+	treeToDisplayableTree(tree:any):void
+		{
 
+		}
 	}

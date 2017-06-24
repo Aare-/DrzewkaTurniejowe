@@ -51,7 +51,8 @@ export class UserComponent implements OnInit, OnDestroy
 		console.log("adding tree:"+name);
 		this.treeService.postTree({TreeName:name,Owner:this.user}).subscribe(
 		response=>{
-			this.router.navigate(['/view/'+response._id]);
+			console.log(response);
+			this.router.navigate(['/view/'+response["_id"]]);
 			console.log(response);
 			},
 		error=>{console.log(error); this.error =error;}

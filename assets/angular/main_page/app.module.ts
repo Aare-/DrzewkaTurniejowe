@@ -13,6 +13,7 @@ import { BrowseComponent }  from './components/browse/browse.component';
 import { HomeComponent }  from './components/home/home.component';
 import { TreeListComponent }  from './components/tree-list/tree-list.component';
 import { UserComponent }  from './components/user/user.component';
+import { TreeViewComponent }  from './components/tree-view/tree-view.component';
 
 import { TreeService }  from './services/tree.service';
 import {AuthService} from './services/auth.service';
@@ -70,7 +71,8 @@ import {AuthService} from './services/auth.service';
 		ViewComponent,
 		HomeComponent,
 		TreeListComponent,
-		UserComponent
+		UserComponent,
+		TreeViewComponent
 		],
   bootstrap:    [ AppComponent ]
 })

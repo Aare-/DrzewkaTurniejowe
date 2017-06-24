@@ -22,6 +22,7 @@ const browse_component_1 = require('./components/browse/browse.component');
 const home_component_1 = require('./components/home/home.component');
 const tree_list_component_1 = require('./components/tree-list/tree-list.component');
 const user_component_1 = require('./components/user/user.component');
+const tree_view_component_1 = require('./components/tree-view/tree-view.component');
 const tree_service_1 = require('./services/tree.service');
 const auth_service_1 = require('./services/auth.service');
 let AppModule = class AppModule {
@@ -75,7 +76,8 @@ AppModule = __decorate([
             view_component_1.ViewComponent,
             home_component_1.HomeComponent,
             tree_list_component_1.TreeListComponent,
-            user_component_1.UserComponent
+            user_component_1.UserComponent,
+            tree_view_component_1.TreeViewComponent
         ],
         bootstrap: [app_component_1.AppComponent]
     }), 

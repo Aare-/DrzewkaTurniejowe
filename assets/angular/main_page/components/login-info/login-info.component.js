@@ -57,6 +57,8 @@ let LoginInfoComponent = class LoginInfoComponent {
             .then(value => { this.checkAuth(); console.log("e"); })
             .catch(value => { this.checkAuth(); console.log("f"); });
     }
+    treeToDisplayableTree(tree) {
+    }
 };
 LoginInfoComponent = __decorate([
     core_1.Component({

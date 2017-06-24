@@ -37,13 +37,13 @@ let TreeService = class TreeService {
         // In a real world app, you might use a remote logging infrastructure
         let errMsg;
         if (error instanceof http_1.Response) {
-            console.log("this ???");
+            //console.log("this ???");
             const body = error.json() || '';
             const err = body.error || JSON.stringify(body);
             errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
         }
         else {
-            console.log("that ???");
+            //console.log("that ???");
             errMsg = error.message ? error.message : error.toString();
         }
         console.error(errMsg);
@@ -60,7 +60,7 @@ let TreeService = class TreeService {
     postTree(tree) {
         let headers = new http_2.Headers({ 'Content-Type': 'application/json' });
         let options = new http_2.RequestOptions({ headers: headers });
-        console.log(tree);
+        //console.log(tree);
         return this.http.post('/rest/Tree', tree, options)
             .map(this.extractData)
             .catch(this.handleError);
@@ -104,8 +104,8 @@ let TreeService = class TreeService {
         options.search = params;
         //params.set("_id",id);
         params.set("_email", email);
-        console.log("almost removing");
-        console.log(email);
+        //console.log("almost removing");
+        //console.log(email);
         return this.http.delete('/rest/Tree/' + id + '/Participant/' + encodeURI(email), options)
             .map(res => { return ({}); })
             .catch(err => { console.log(err); return Observable_1.Observable.throw(err); });

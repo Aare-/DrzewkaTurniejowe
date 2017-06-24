@@ -41,14 +41,14 @@ private handleError (error: Response | any)
   let errMsg: string;
   if (error instanceof Response)
 		{
-		console.log("this ???");
+		//console.log("this ???");
     const body = error.json() || '';
     const err = body.error || JSON.stringify(body);
     errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
   	}
 	else
 		{
-		console.log("that ???");
+		//console.log("that ???");
     errMsg = error.message ? error.message : error.toString();
   	}
   console.error(errMsg);
@@ -70,7 +70,7 @@ private handleError (error: Response | any)
 		{
 	  let headers = new Headers({ 'Content-Type': 'application/json' });
 	  let options = new RequestOptions({ headers: headers });
-		console.log(tree);
+		//console.log(tree);
 	  return this.http.post('/rest/Tree', tree, options)
 	                  .map(this.extractData)
 	                  .catch(this.handleError);
@@ -124,8 +124,8 @@ private handleError (error: Response | any)
 		options.search = params;
 		//params.set("_id",id);
 		params.set("_email",email);
-		console.log("almost removing");
-		console.log(email);
+		//console.log("almost removing");
+		//console.log(email);
 	  return this.http.delete('/rest/Tree/'+id+'/Participant/'+encodeURI(email), options)
 	                  .map(res=>{return({});})
 	                  .catch(err=>{console.log(err);return Observable.throw(err);});
