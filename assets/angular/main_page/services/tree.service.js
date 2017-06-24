@@ -124,6 +124,13 @@ let TreeService = class TreeService {
             .map(res => { return ({}); })
             .catch(res => { return Observable_1.Observable.throw("database error"); });
     }
+    setNodeResult(treeId, nodeId, result) {
+        let headers = new http_2.Headers({ 'Content-Type': 'application/json' });
+        let options = new http_2.RequestOptions({ headers: headers });
+        return this.http.put('/rest/Tree/' + treeId + '/Node/' + nodeId + "/SetResult", { Result: result }, options)
+            .map(res => { return ({}); })
+            .catch(res => { return Observable_1.Observable.throw("database error"); });
+    }
 };
 TreeService = __decorate([
     core_1.Injectable(), 

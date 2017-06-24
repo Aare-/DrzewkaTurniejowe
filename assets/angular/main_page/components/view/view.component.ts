@@ -15,6 +15,10 @@ import { Router } from '@angular/router';
 		<h3 class="text-danger" *ngIf="!tree"> There is no tree to display at this address</h3>
 		<div *ngIf="tree">
 			<div>
+				<div> <!-- here whall be built tree-->
+					<h3>Tree</h3>
+					<tree-view *ngIf="builtTree" [viewParent]="self" [newNode]="builtTree" [tree]="tree"></tree-view>
+				</div>
 				<div class="row">
 				<div class ="col-sm-6">
 				<p>owner:<a [routerLink]="['/user', tree.Owner]">{{tree.Owner}}</a></p>
@@ -36,7 +40,7 @@ import { Router } from '@angular/router';
 						</tr>
 					</tbody>
 				</table>
-				<div *ngIf="(tree.Participants.length==0) || !tree.Participants" class="alert alert-info"> There are not participants in this tree</div>
+				<div *ngIf="(tree.Participants.length==0) || !tree.Participants" class="alert alert-info"> There are no participants in this tree</div>
 				</div>
 				</div>
 				<div *ngIf="tree.Owner==authService.currentUserId">
@@ -58,9 +62,7 @@ import { Router } from '@angular/router';
 						</form>
 					</div>
 				</div>
-				<div> <!-- here whall be built tree-->
-					<tree-view *ngIf="builtTree" [newNode]="builtTree" [tree]="tree"></tree-view>
-				</div>
+
 			</div>
 		</div>
 
@@ -76,6 +78,7 @@ export class ViewComponent implements OnInit, OnDestroy
 	tree:any;
 	error:any;
 	builtTree:any;
+	self=this;
 	ngOnInit():void
 		{
 		this.sub = this.activatedRoute.params.subscribe(params =>

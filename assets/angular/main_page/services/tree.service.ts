@@ -148,4 +148,13 @@ private handleError (error: Response | any)
 		                  .map(res=>{return({});})
 		                  .catch(res=>{return Observable.throw("database error")});
 			}
+		setNodeResult(treeId:string,nodeId:string,result:number)
+			{
+		  let headers = new Headers({ 'Content-Type': 'application/json' });
+		  let options = new RequestOptions({ headers: headers });
+
+		  return this.http.put('/rest/Tree/'+treeId+'/Node/'+nodeId+"/SetResult",{Result:result}, options)
+		                  .map(res=>{return({});})
+		                  .catch(res=>{return Observable.throw("database error")});
+			}
 	}
