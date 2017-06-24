@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   selector: 'user',
   template: `
 	<div class ="container">
-		<h2>user component</h2>
+		<h2>User</h2>
 		<tree-list #treelist [(username)]="user"></tree-list>
 		<div *ngIf="user==authService.currentUserId" class="well">
 			<h3>Add tree:</h3>

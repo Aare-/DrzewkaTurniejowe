@@ -98,6 +98,7 @@ ViewComponent = __decorate([
 				<div> <!-- here whall be built tree-->
 					<h3>Tree</h3>
 					<tree-view *ngIf="builtTree" [viewParent]="self" [newNode]="builtTree" [tree]="tree"></tree-view>
+					<button class="btn btn-default" (click)="refreshTree()">Refresh</button>
 				</div>
 				<div class="row">
 				<div class ="col-sm-6">

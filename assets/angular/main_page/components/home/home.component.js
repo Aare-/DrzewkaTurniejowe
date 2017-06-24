@@ -15,7 +15,12 @@ HomeComponent = __decorate([
     core_1.Component({
         selector: 'home',
         template: `
-	<h2>mockup of home (homepage) </h2>
+	<div class ="container">
+		<div class = "jumbotron">
+			<h1>Welcome to Tournament Tree! </h1>
+			<p> A leading platform towards generating tournament trees.</p>
+		</div>
+	</div>
 	`,
     }), 
     __metadata('design:paramtypes', [])

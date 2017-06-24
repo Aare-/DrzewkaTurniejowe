@@ -10,10 +10,11 @@ import {AuthService} from '../../services/auth.service'
 			<div *ngIf="loginError" class="form-group text-danger" >
 				{{loginError}}
 			</div>
-			<input type="email" [(ngModel)]="email" (change)="check_validity()" class="form-control" placeholder="example@mail.com">
-			<input  type="password" [(ngModel)]="password" (change)="check_validity()" class="form-control" placeholder="password">
-			<button (click)="login()" [disabled]="error" class="btn btn-default">Log in</button>
-
+			<form>
+			<input name="emailinput" type="email" required [(ngModel)]="email"  class="form-control" placeholder="example@mail.com">
+			<input name="passwordinput"  type="password" required [(ngModel)]="password"  class="form-control" placeholder="password">
+			<button name="buttoninput" (click)="login()" class="btn btn-default">Log in</button>
+			</form>
 		</div>
 		<div *ngIf="loggedIn" >
 			<div class="form-group" >

@@ -5,7 +5,12 @@ import { Component } from '@angular/core';
 	({
   selector: 'home',
   template: `
-	<h2>mockup of home (homepage) </h2>
+	<div class ="container">
+		<div class = "jumbotron">
+			<h1>Welcome to Tournament Tree! </h1>
+			<p> A leading platform towards generating tournament trees.</p>
+		</div>
+	</div>
 	`,
 	})
 export class HomeComponent
