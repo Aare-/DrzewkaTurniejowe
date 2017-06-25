@@ -47,7 +47,7 @@ UserComponent = __decorate([
         selector: 'user',
         template: `
 	<div class ="container">
-		<h2>User</h2>
+		<h2>User {{user}}</h2>
 		<tree-list #treelist [(username)]="user"></tree-list>
 		<div *ngIf="user==authService.currentUserId" class="well">
 			<h3>Add tree:</h3>

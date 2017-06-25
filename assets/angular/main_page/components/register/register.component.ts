@@ -24,7 +24,7 @@ import {AuthService} from '../../services/auth.service';
 
 			<div class="form-group">
 				<label for="password1">password</label>
-				<input name="password1" type="password" class="form-control" id="password1" [ngModel]="password1" minlength="6" required #vpassword1="ngModel">
+				<input name="password1" type="password" class="form-control" id="password1" [(ngModel)]="password1" minlength="6" required #vpassword1="ngModel">
 
 				<div *ngIf="vpassword1.errors && (vpassword1.dirty || vpassword1.touched)" class="alert alert-danger">
 					<div [hidden]="!vpassword1.errors.required">
@@ -60,8 +60,8 @@ import {AuthService} from '../../services/auth.service';
 	})
 export class RegisterComponent
 	{
-	email:string="email";
-	password1:string="pass_1";
+	email:string;
+	password1:string;
 	error:string;
 	success:string;
 	//temp

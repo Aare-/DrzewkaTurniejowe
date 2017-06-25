@@ -13,8 +13,6 @@ const auth_service_1 = require('../../services/auth.service');
 let RegisterComponent = class RegisterComponent {
     constructor(authService) {
         this.authService = authService;
-        this.email = "email";
-        this.password1 = "pass_1";
     }
     onSubmit() {
         console.log("attempting to register " + this.email + " " + this.password1);
@@ -44,7 +42,7 @@ RegisterComponent = __decorate([
 
 			<div class="form-group">
 				<label for="password1">password</label>
-				<input name="password1" type="password" class="form-control" id="password1" [ngModel]="password1" minlength="6" required #vpassword1="ngModel">
+				<input name="password1" type="password" class="form-control" id="password1" [(ngModel)]="password1" minlength="6" required #vpassword1="ngModel">
 
 				<div *ngIf="vpassword1.errors && (vpassword1.dirty || vpassword1.touched)" class="alert alert-danger">
 					<div [hidden]="!vpassword1.errors.required">
